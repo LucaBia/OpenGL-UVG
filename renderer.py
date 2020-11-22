@@ -14,12 +14,14 @@ screen = pygame.display.set_mode(screenSize, DOUBLEBUF | OPENGL)
 
 
 renderer = Renderer(screen)
+renderer.camPosition.z = 3
+renderer.pointLight.x = 5
+
 renderer.setShaders(shaders.vertex_shader, shaders.fragment_shader)
-renderer.createObjects()
+
+renderer.modelList.append(Model('model.obj', 'model.bmp'))
 
 
-cubeX = 0
-cubeZ = 0
 
 isPlaying = True
 while isPlaying:
@@ -27,13 +29,13 @@ while isPlaying:
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-        cubeX -= 2 * deltaTime
+        renderer.camPosition.x += 1 * deltaTime
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-        cubeX += 2 * deltaTime
+        renderer.camPosition.x -= 1 * deltaTime
     if keys[pygame.K_w] or keys[pygame.K_UP]:
-        cubeZ -= 2 * deltaTime
+        renderer.camPosition.z -= 1 * deltaTime
     if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-        cubeZ += 2 * deltaTime
+        renderer.camPosition.z += 1 * deltaTime
 
     if keys[pygame.K_r] or keys[pygame.K_c]:
         renderer.rotaYaw()
@@ -50,11 +52,9 @@ while isPlaying:
             if ev.key == pygame.K_1:
                 renderer.filledMode()
             elif ev.key == pygame.K_2:
-                renderer.wireframeMode
+                renderer.wireframeMode()
             elif ev.key == pygame.K_ESCAPE:
                 isPlaying = False
-
-    renderer.translateCube(cubeX, 0, cubeZ)
 
     renderer.render()
 
