@@ -19,7 +19,10 @@ renderer.pointLight.x = 5
 
 renderer.setShaders(shaders.vertex_shader, shaders.fragment_shader)
 
-renderer.modelList.append(Model('model.obj', 'model.bmp'))
+renderer.modelList.append(Model('models/model.obj', 'models/textures/model.bmp'))
+# renderer.modelList.append(Model('models/Dice/Dice.obj', 'models/Dice/Dice_Base.bmp'))
+renderer.modelList.append(Model('models/Skull/barrel.obj', 'models/Skull/Barrel_Ex_diff.bmp'))
+
 
 
 
@@ -55,6 +58,8 @@ while isPlaying:
                 renderer.wireframeMode()
             elif ev.key == pygame.K_ESCAPE:
                 isPlaying = False
+            elif ev.key == pygame.K_SPACE:
+                renderer.activeModelIndex = (renderer.activeModelIndex + 1) % len(renderer.modelList)
 
     renderer.render()
 

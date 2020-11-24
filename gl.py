@@ -94,6 +94,7 @@ class Renderer(object):
         glViewport(0, 0, self.width, self.height)
 
         self.modelList = []
+        self.activeModelIndex = 0
 
         self.camPosition = glm.vec3(0, 0, 0)
         self.camRotation = glm.vec3(0, 0, 0)
@@ -180,8 +181,13 @@ class Renderer(object):
             glUniform4f(glGetUniformLocation(self.active_shader, "color"), 1, 1, 1, 1)
 
 
-        for model in self.modelList:
-            if self.active_shader:
-                glUniformMatrix4fv(glGetUniformLocation(self.active_shader, "model"), 1, GL_FALSE, glm.value_ptr(model.getMatrix()))
+        # for model in self.modelList:
+        #    if self.active_shader:
+        #        glUniformMatrix4fv(glGetUniformLocation(self.active_shader, "model"), 1, GL_FALSE, glm.value_ptr(model.getMatrix()))
 
-            model.renderInScene()
+        #    model.renderInScene()
+
+        if self.active_shader:
+            glUniformMatrix4fv(glGetUniformLocation(self.active_shader, "model"), 1, GL_FALSE, glm.value_ptr(self.modelList[self.activeModelIndex].getMatrix()))
+
+            self.modelList[self.activeModelIndex].renderInScene()
