@@ -50,9 +50,9 @@ while isPlaying:
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
         renderer.camPosition.x -= 1 * deltaTime
     if keys[pygame.K_w] or keys[pygame.K_UP]:
-        renderer.camPosition.z -= 1 * deltaTime
+        renderer.camPosition.y += 1 * deltaTime
     if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-        renderer.camPosition.z += 1 * deltaTime
+        renderer.camPosition.y -= 1 * deltaTime
 
     if keys[pygame.K_r] or keys[pygame.K_c]:
         renderer.rotaYaw()
@@ -74,6 +74,13 @@ while isPlaying:
                 isPlaying = False
             elif ev.key == pygame.K_SPACE:
                 renderer.activeModelIndex = (renderer.activeModelIndex + 1) % len(renderer.modelList)
+        elif ev.type == pygame.MOUSEBUTTONDOWN or ev.type == pygame.MOUSEBUTTONUP:
+            if ev.button == 4:
+                if renderer.camPosition.z >= 0.75:
+                    renderer.camPosition.z -= 2 * deltaTime
+            elif ev.button == 5:
+                if renderer.camPosition.z <= 10:
+                    renderer.camPosition.z += 2 * deltaTime
 
     renderer.render()
 
