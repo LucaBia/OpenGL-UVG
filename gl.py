@@ -18,7 +18,7 @@ class Model(object):
         self.texture = glGenTextures(1)
 
         self.position = glm.vec3(0,0,0)
-        self.rotation = glm.vec3(0,0,0) # pitch, yaw, roll
+        self.rotation = glm.vec3(0,0,0)
         self.scale = glm.vec3(1,1,1)
 
     def getMatrix(self):
@@ -36,19 +36,16 @@ class Model(object):
 
         for face in self.model.faces:
             for i in range(3):
-                #verts
                 buffer.append(self.model.vertices[face[i][0] - 1][0])
                 buffer.append(self.model.vertices[face[i][0] - 1][1])
                 buffer.append(self.model.vertices[face[i][0] - 1][2])
                 buffer.append(1)
 
-                #norms
                 buffer.append(self.model.normals[face[i][2] - 1][0])
                 buffer.append(self.model.normals[face[i][2] - 1][1])
                 buffer.append(self.model.normals[face[i][2] - 1][2])
                 buffer.append(0)
 
-                #texcoords
                 buffer.append(self.model.texcoords[face[i][1] - 1][0])
                 buffer.append(self.model.texcoords[face[i][1] - 1][1])
 
@@ -56,27 +53,23 @@ class Model(object):
 
 
     def renderInScene(self):
-        VBO = glGenBuffers(1) #Vertex Buffer Object
-        VAO = glGenVertexArrays(1) #Vertex Array Object
+        VBO = glGenBuffers(1)
+        VAO = glGenVertexArrays(1)
 
         glBindVertexArray(VAO)
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO)
         glBufferData(GL_ARRAY_BUFFER, self.vertBuffer.nbytes, self.vertBuffer, GL_STATIC_DRAW)
 
-        # Atributo de posicion de vertices
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * 10, ctypes.c_void_p(0))
         glEnableVertexAttribArray(0)
 
-        # Atributo de normal de vertices
         glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * 10, ctypes.c_void_p(4 * 4))
         glEnableVertexAttribArray(1)
 
-        ## Atributo de uvs de vertices
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 4 * 10, ctypes.c_void_p(4 * 8))
         glEnableVertexAttribArray(2)
 
-        # Dar textura
         glBindTexture(GL_TEXTURE_2D, self.texture)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, self.texture_surface.get_width(), self.texture_surface.get_height(), 0, GL_RGB, GL_UNSIGNED_BYTE, self.texture_data)
         glGenerateMipmap(GL_TEXTURE_2D)
@@ -100,7 +93,6 @@ class Renderer(object):
         self.camRotation = glm.vec3(0, 0, 0)
 
         self.projection = glm.perspective(glm.radians(60), self.width / self.height, 0.1, 1000)
-        # self.cubePos = glm.vec3(0,0,0)
 
         self.pointLight = glm.vec4(0,0,0,0)
 

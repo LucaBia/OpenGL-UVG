@@ -1,4 +1,5 @@
 import pygame
+import glm
 from pygame.locals import *
 from gl import Renderer, Model
 import shaders
@@ -14,15 +15,28 @@ screen = pygame.display.set_mode(screenSize, DOUBLEBUF | OPENGL)
 
 
 renderer = Renderer(screen)
+# renderer.camPosition.z = 300
 renderer.camPosition.z = 3
 renderer.pointLight.x = 5
 
 renderer.setShaders(shaders.vertex_shader, shaders.fragment_shader)
 
-renderer.modelList.append(Model('models/model.obj', 'models/textures/model.bmp'))
-# renderer.modelList.append(Model('models/Dice/Dice.obj', 'models/Dice/Dice_Base.bmp'))
-renderer.modelList.append(Model('models/Skull/barrel.obj', 'models/Skull/Barrel_Ex_diff.bmp'))
+man = Model('models/model.obj', 'models/textures/model.bmp')
+#black.scale = glm.vec3(0.5,0.5,0.5)
+renderer.modelList.append(man)
 
+barrel = Model('models/barrel/barrel.obj', 'models/barrel/barrel.bmp')
+barrel.scale = glm.vec3(0.5,0.5,0.5)
+renderer.modelList.append(barrel)
+
+key = Model('models/key/key.obj', 'models/key/key.bmp')
+key.scale = glm.vec3(0.5,0.5,0.5)
+renderer.modelList.append(key)
+
+boat = Model('models/boat/boat.obj', 'models/boat/boat.bmp')
+boat.scale = glm.vec3(0.1,0.1,0.1)
+renderer.modelList.append(boat)
+#renderer.modelList.append(Model('models/Skull/Boat.obj', 'models/Skull/boat.bmp'))
 
 
 
