@@ -1,6 +1,7 @@
 import pygame
 import glm
 import numpy as np
+import math
 from OpenGL.GL import *
 from OpenGL.GL.shaders import compileProgram, compileShader
 from obj import Obj
@@ -88,6 +89,8 @@ class Renderer(object):
 
         self.modelList = []
         self.activeModelIndex = 0
+        self.shaderList = []
+        self.activeShaderIndex = 0
 
         self.camPosition = glm.vec3(0, 0, 0)
         self.camRotation = glm.vec3(0, 0, 0)
@@ -95,6 +98,9 @@ class Renderer(object):
         self.projection = glm.perspective(glm.radians(60), self.width / self.height, 0.1, 1000)
 
         self.pointLight = glm.vec4(0,0,0,0)
+
+        self.angle = 0
+        self.viewMatrix = self.getViewMatrix()
 
         self.rotYaw = 0
         self.rotPitch = 0
@@ -109,6 +115,12 @@ class Renderer(object):
         camRotate = camPitch * camYaw * camRoll
 
         return glm.inverse(camTranslate * camRotate)
+
+    def cameraView(self):
+        r = (self.camPosition.x ** 2 + self.camPosition.z ** 2) ** 0.5
+        self.camPosition.x = r * math.cos(self.angle * math.pi / 180)
+        self.camPosition.z = r * math.sin(self.angle * math.pi / 180)
+        self.viewMatrix = glm.lookAt(self.camPosition, self.modelList[self.activeModelIndex].position, glm.vec3(0, 1, 0))
 
 
     def wireframeMode(self):
@@ -134,7 +146,7 @@ class Renderer(object):
 
     def setShaders(self, vertexShader, fragShader):
         if vertexShader is not None or fragShader is not None:
-            self.active_shader = compileProgram(compileShader(vertexShader, GL_VERTEX_SHADER), compileShader(fragShader, GL_FRAGMENT_SHADER))
+            self.active_shader = compileProgram(compileShader(vertexShader, GL_VERTEX_SHADER), compileShader(fragShader, GL_FRAGMENT_SHADER), validate=False)
         else:
             self.active_shader = None
 
@@ -167,7 +179,7 @@ class Renderer(object):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT )
 
         if self.active_shader:
-            glUniformMatrix4fv(glGetUniformLocation(self.active_shader, "view"), 1, GL_FALSE, glm.value_ptr(self.getViewMatrix()))
+            glUniformMatrix4fv(glGetUniformLocation(self.active_shader, "view"), 1, GL_FALSE, glm.value_ptr(self.viewMatrix))
             glUniformMatrix4fv(glGetUniformLocation(self.active_shader, "projection"), 1, GL_FALSE, glm.value_ptr(self.projection))
             glUniform4f(glGetUniformLocation(self.active_shader, "light"), self.pointLight.x, self.pointLight.y, self.pointLight.z, self.pointLight.w)
             glUniform4f(glGetUniformLocation(self.active_shader, "color"), 1, 1, 1, 1)
@@ -183,3 +195,8 @@ class Renderer(object):
             glUniformMatrix4fv(glGetUniformLocation(self.active_shader, "model"), 1, GL_FALSE, glm.value_ptr(self.modelList[self.activeModelIndex].getMatrix()))
 
             self.modelList[self.activeModelIndex].renderInScene()
+
+
+    
+    
+    
