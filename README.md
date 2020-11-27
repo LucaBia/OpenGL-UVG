@@ -1,4 +1,4 @@
-Proyecto 4: OpenGL-UVG
+# Proyecto 4: OpenGL-UVG
 
 Inputs:
 - w, flecha arriba: Mueve la camara para arriba manteniendo siempre la mira al centro
